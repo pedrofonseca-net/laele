@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real ou Fake? | Cidadania Digital e Inteligência Artificial</title>
+<meta name="description" content="Site educativo sobre deepfakes, desinformação por IA e cidadania digital, feito para a comunidade escolar.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  /* =========================================================
+     TOKENS
+  ========================================================= */
+  :root{
+    --azul-profundo:#0B1E3D;
+    --azul-eletrico:#2E7CF6;
+    --azul-claro:#CFE1FF;
+    --rosa-choque:#FF2E88;
+    --rosa-suave:#FFD6E8;
+    --branco:#F7F8FC;
+    --texto:#101425;
+    --texto-suave:#4A4F66;
+    --borda:#DDE3F5;
+    --card-bg:#FFFFFF;
+    --superficie:#F0F3FC;
+
+    --fonte-display:'Space Grotesk', sans-serif;
+    --fonte-corpo:'Inter', sans-serif;
+    --fonte-mono:'JetBrains Mono', monospace;
+
+    --escala-fonte:1;
+    --raio:18px;
+    --sombra: 0 10px 30px rgba(11,30,61,0.10);
+  }
+
+  [data-tema="escuro"]{
+    --azul-profundo:#050A16;
+    --branco:#0E1424;
+    --texto:#F2F4FF;
+    --texto-suave:#B7BEDB;
+    --borda:#232B49;
+    --card-bg:#131A30;
+    --superficie:#0C1226;
+    --azul-claro:#1B2E57;
+    --rosa-suave:#3A1330;
+    --sombra: 0 10px 30px rgba(0,0,0,0.45);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--branco);
+    color:var(--texto);
+    font-family:var(--fonte-corpo);
+    font-size:calc(16px * var(--escala-fonte));
+    line-height:1.6;
+    transition:background .3s ease, color .3s ease;
+  }
+  img{max-width:100%; display:block; border-radius:var(--raio);}
+  h1,h2,h3,h4{font-family:var(--fonte-display); line-height:1.15; margin:0 0 .5em;}
+  p{margin:0 0 1em;}
+  a{color:inherit;}
+  section{padding:5rem 1.5rem;}
+  .container{max-width:1100px; margin:0 auto;}
+  .eyebrow{
+    font-family:var(--fonte-mono);
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    font-size:.78rem;
+    font-weight:600;
+    color:var(--rosa-choque);
+    margin-bottom:.8rem;
+    display:inline-block;
+  }
+  .secao-titulo{max-width:640px; margin-bottom:3rem;}
+  .secao-titulo h2{font-size:clamp(1.7rem,3.5vw,2.6rem);}
+  .secao-titulo p{color:var(--texto-suave); font-size:1.05rem;}
+
+  :focus-visible{
+    outline:3px solid var(--rosa-choque);
+    outline-offset:3px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* =========================================================
+     BARRA DE ACESSIBILIDADE
+  ========================================================= */
+  .barra-acessibilidade{
+    position:sticky; top:0; z-index:200;
+    background:var(--azul-profundo);
+    color:#fff;
+    display:flex; align-items:center; gap:.6rem;
+    padding:.5rem 1rem;
+    font-size:.82rem;
+    flex-wrap:wrap;
+  }
+  .barra-acessibilidade span.rotulo{
+    font-family:var(--fonte-mono);
+    color:var(--azul-claro);
+    margin-right:.3rem;
+    white-space:nowrap;
+  }
+  .barra-acessibilidade button{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.25);
+    color:#fff;
+    padding:.4rem .7rem;
+    border-radius:999px;
+    cursor:pointer;
+    font-family:var(--fonte-corpo);
+    font-weight:600;
+    font-size:.8rem;
+    transition:background .2s;
+  }
+  .barra-acessibilidade button:hover{background:var(--rosa-choque); border-color:var(--rosa-choque);}
+  .barra-acessibilidade button.ativo{background:var(--azul-eletrico); border-color:var(--azul-eletrico);}
+  .barra-acessibilidade .espacador{flex:1;}
+  .skip-link{
+    position:absolute; left:-999px; top:0; background:var(--rosa-choque); color:#fff;
+    padding:.6rem 1rem; z-index:999; border-radius:0 0 8px 0;
+  }
+  .skip-link:focus{left:0;}
+
+  /* =========================================================
+     CABEÇALHO / NAV
+  ========================================================= */
+  header.principal{
+    position:sticky; top:41px; z-index:150;
+    background:var(--branco);
+    border-bottom:1px solid var(--borda);
+    backdrop-filter:blur(6px);
+  }
+  .nav-wrap{
+    max-width:1100px; margin:0 auto; padding:.9rem 1.5rem;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  }
+  .logo{
+    font-family:var(--fonte-display); font-weight:700; font-size:1.2rem;
+    display:flex; align-items:center; gap:.5rem; text-decoration:none;
+  }
+  .logo .ponto{
+    width:12px; height:12px; border-radius:50%;
+    background:linear-gradient(135deg, var(--rosa-choque), var(--azul-eletrico));
+    display:inline-block;
+  }
+  nav.links{display:flex; gap:1.6rem; font-size:.92rem; font-weight:600;}
+  nav.links a{text-decoration:none; color:var(--texto-suave); transition:color .2s;}
+  nav.links a:hover{color:var(--rosa-choque);}
+  @media (max-width:760px){ nav.links{display:none;} }
+
+  /* =========================================================
+     HERO
+  ========================================================= */
+  .hero{
+    position:relative;
+    overflow:hidden;
+    padding:6rem 1.5rem 5rem;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,46,136,.35), transparent 45%),
+      radial-gradient(circle at 85% 10%, rgba(46,124,246,.35), transparent 50%),
+      var(--azul-profundo);
+    color:#fff;
+  }
+  .hero-grid{
+    max-width:1100px; margin:0 auto;
+    display:grid; grid-template-columns:1.1fr .9fr; gap:3rem; align-items:center;
+  }
+  @media (max-width:860px){ .hero-grid{grid-template-columns:1fr;} }
+  .hero h1{
+    font-size:clamp(2.2rem,5vw,3.6rem);
+    background:linear-gradient(100deg,#fff 30%, var(--rosa-suave) 60%, var(--azul-claro) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p.lead{font-size:1.15rem; color:#DCE3FF; max-width:46ch;}
+  .hero .cta-row{display:flex; gap:1rem; flex-wrap:wrap; margin-top:1.5rem;}
+  .btn{
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:.85rem 1.5rem; border-radius:999px; font-weight:700; text-decoration:none;
+    font-size:.95rem; border:2px solid transparent; cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-rosa{background:var(--rosa-choque); color:#fff; box-shadow:0 8px 24px rgba(255,46,136,.35);}
+  .btn-azul{background:var(--azul-eletrico); color:#fff; box-shadow:0 8px 24px rgba(46,124,246,.35);}
+  .btn-contorno{background:transparent; border-color:rgba(255,255,255,.5); color:#fff;}
+
+  .hero-card{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:22px;
+    padding:1.2rem;
+    backdrop-filter:blur(6px);
+  }
+  .hero-card img{border-radius:14px;}
+  .hero-card .legenda{font-size:.8rem; color:#B9C4EE; margin-top:.6rem; font-family:var(--fonte-mono);}
+
+  .fita{
+    background:var(--rosa-choque);
+    color:#fff; font-family:var(--fonte-mono); font-weight:600; font-size:.85rem;
+    padding:.55rem 0; overflow:hidden; white-space:nowrap; letter-spacing:.05em;
+  }
+  .fita span{display:inline-block; padding-right:3rem; animation:rolar 22s linear infinite;}
+  @keyframes rolar{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  /* =========================================================
+     CARDS / GRIDS GERAIS
+  ========================================================= */
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:2.5rem; align-items:center;}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem;}
+  .grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:1.2rem;}
+  @media (max-width:860px){ .grid-2{grid-template-columns:1fr;} .grid-3{grid-template-columns:1fr 1fr;} .grid-4{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .grid-3{grid-template-columns:1fr;} .grid-4{grid-template-columns:1fr;} }
+
+  .cartao{
+    background:var(--card-bg);
+    border:1px solid var(--borda);
+    border-radius:var(--raio);
+    padding:1.6rem;
+    box-shadow:var(--sombra);
+  }
+  .cartao .icone{
+    width:46px; height:46px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.4rem; margin-bottom:1rem;
+    background:linear-gradient(135deg, var(--rosa-suave), var(--azul-claro));
+  }
+  .cartao h3{font-size:1.1rem;}
+  .cartao p{color:var(--texto-suave); font-size:.95rem; margin:0;}
+
+  section.alt{background:var(--superficie);}
+
+  /* =========================================================
+     SEÇÃO: O QUE É DEEPFAKE
+  ========================================================= */
+  .selo{
+    display:inline-flex; align-items:center; gap:.4rem;
+    background:var(--rosa-suave); color:var(--rosa-choque);
+    padding:.3rem .8rem; border-radius:999px; font-size:.8rem; font-weight:700;
+    font-family:var(--fonte-mono); margin-bottom:1rem;
+  }
+
+  /* =========================================================
+     COMPARADOR REAL x FAKE (ELEMENTO DE ASSINATURA)
+  ========================================================= */
+  .comparador{
+    position:relative; max-width:720px; margin:0 auto;
+    border-radius:var(--raio); overflow:hidden; box-shadow:var(--sombra);
+    aspect-ratio:16/10;
+    border:1px solid var(--borda);
+  }
+  .comparador img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:0;
+    user-select:none; -webkit-user-drag:none;
+  }
+  .comparador .camada-fake{
+    clip-path:inset(0 0 0 50%);
+    filter:saturate(1.3) hue-rotate(-8deg);
+  }
+  .comparador .divisor{
+    position:absolute; top:0; bottom:0; left:50%;
+    width:4px; background:#fff; transform:translateX(-50%);
+    box-shadow:0 0 0 3px rgba(255,255,255,.4);
+    pointer-events:none;
+  }
+  .comparador .alca{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:46px; height:46px; border-radius:50%;
+    background:#fff; color:var(--azul-profundo);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; box-shadow:0 4px 14px rgba(0,0,0,.3);
+    pointer-events:none; font-size:1.1rem;
+  }
+  .comparador input[type=range]{
+    position:absolute; inset:0; width:100%; height:100%;
+    margin:0; opacity:0; cursor:ew-resize;
+  }
+  .tag-comparador{
+    position:absolute; top:12px; padding:.3rem .7rem; border-radius:999px;
+    font-family:var(--fonte-mono); font-size:.75rem; font-weight:700; color:#fff;
+  }
+  .tag-real{left:12px; background:var(--azul-eletrico);}
+  .tag-fake{right:12px; background:var(--rosa-choque);}
+  .dica-comparador{
+    text-align:center; color:var(--texto-suave); font-size:.9rem; margin-top:1rem;
+    font-family:var(--fonte-mono);
+  }
+
+  /* =========================================================
+     CHECKLIST "COMO IDENTIFICAR"
+  ========================================================= */
+  .lista-sinais{list-style:none; margin:0; padding:0; display:grid; gap:1rem;}
+  .lista-sinais li{
+    display:flex; gap:1rem; align-items:flex-start;
+    background:var(--card-bg); border:1px solid var(--borda);
+    border-radius:14px; padding:1rem 1.2rem;
+  }
+  .lista-sinais .num{
+    font-family:var(--fonte-mono); font-weight:700; color:#fff;
+    background:var(--azul-eletrico);
+    width:30px; height:30px; min-width:30px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; font-size:.85rem;
+  }
+  .lista-sinais strong{display:block; margin-bottom:.2rem;}
+  .lista-sinais span.desc{color:var(--texto-suave); font-size:.92rem;}
+
+  /* =========================================================
+     VÍDEOS
+  ========================================================= */
+  .video-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:2rem;}
+  @media (max-width:800px){ .video-grid{grid-template-columns:1fr;} }
+  .video-card{background:var(--card-bg); border:1px solid var(--borda); border-radius:var(--raio); overflow:hidden; box-shadow:var(--sombra);}
+  .video-embed{position:relative; width:100%; padding-top:56.25%; background:#000;}
+  .video-embed iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .video-info{padding:1.1rem 1.3rem;}
+  .video-info h3{font-size:1rem; margin-bottom:.3rem;}
+  .video-info p{font-size:.88rem; color:var(--texto-suave); margin:0;}
+
+  /* =========================================================
+     QUIZ
+  ========================================================= */
+  .quiz-caixa{
+    max-width:680px; margin:0 auto; background:var(--card-bg);
+    border:1px solid var(--borda); border-radius:var(--raio); padding:2rem;
+    box-shadow:var(--sombra);
+  }
+  .quiz-progresso{
+    height:8px; background:var(--superficie); border-radius:999px; overflow:hidden; margin-bottom:1.6rem;
+  }
+  .quiz-progresso > div{
+    height:100%; background:linear-gradient(90deg, var(--rosa-choque), var(--azul-eletrico));
+    width:0%; transition:width .4s ease;
+  }
+  .quiz-pergunta{font-size:1.15rem; font-weight:700; margin-bottom:1.2rem; font-family:var(--fonte-display);}
+  .quiz-opcoes{display:grid; gap:.7rem;}
+  .quiz-opcoes button{
+    text-align:left; padding:.85rem 1.1rem; border-radius:12px;
+    border:2px solid var(--borda); background:var(--superficie); color:var(--texto);
+    font-size:.95rem; cursor:pointer; font-family:var(--fonte-corpo); font-weight:500;
+    transition:border-color .15s, background .15s;
+  }
+  .quiz-opcoes button:hover{border-color:var(--azul-eletrico);}
+  .quiz-opcoes button.correta{background:#DFF6E3; border-color:#2FA84A; color:#134d20;}
+  .quiz-opcoes button.errada{background:#FDE1E7; border-color:var(--rosa-choque); color:#7a0f38;}
+  [data-tema="escuro"] .quiz-opcoes button.correta{background:#123822; color:#8FF0A8;}
+  [data-tema="escuro"] .quiz-opcoes button.errada{background:#3A1220; color:#FFB0C7;}
+  .quiz-feedback{margin-top:1rem; font-size:.9rem; color:var(--texto-suave); min-height:1.4em;}
+  .quiz-rodape{display:flex; justify-content:space-between; align-items:center; margin-top:1.6rem;}
+  .quiz-resultado{text-align:center;}
+  .quiz-resultado .pontuacao{font-family:var(--fonte-display); font-size:3rem; margin:.4rem 0;}
+
+  /* =========================================================
+     BOAS PRÁTICAS
+  ========================================================= */
+  .praticas-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:1.4rem;}
+  @media (max-width:760px){ .praticas-grid{grid-template-columns:1fr;} }
+
+  /* =========================================================
+     GALERIA
+  ========================================================= */
+  .galeria{display:grid; grid-template-columns:repeat(4,1fr); gap:.9rem;}
+  @media (max-width:860px){ .galeria{grid-template-columns:repeat(2,1fr);} }
+  .galeria figure{margin:0; position:relative; border-radius:14px; overflow:hidden;}
+  .galeria img{border-radius:14px; aspect-ratio:1/1; object-fit:cover; transition:transform .3s;}
+  .galeria figure:hover img{transform:scale(1.06);}
+  .galeria figcaption{
+    position:absolute; bottom:0; left:0; right:0;
+    background:linear-gradient(0deg, rgba(5,10,20,.85), transparent);
+    color:#fff; font-size:.75rem; padding:1.6rem .6rem .5rem; font-family:var(--fonte-mono);
+  }
+
+  /* =========================================================
+     RODAPÉ
+  ========================================================= */
+  footer{
+    background:var(--azul-profundo); color:#DCE3FF; padding:4rem 1.5rem 2rem;
+  }
+  .footer-grid{max-width:1100px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr; gap:2.5rem;}
+  @media (max-width:760px){ .footer-grid{grid-template-columns:1fr;} }
+  footer h4{color:#fff; font-size:1rem;}
+  footer ul{list-style:none; padding:0; margin:0; display:grid; gap:.5rem; font-size:.9rem;}
+  footer a{text-decoration:none; color:#B9C4EE;}
+  footer a:hover{color:#fff;}
+  .footer-base{
+    max-width:1100px; margin:2.5rem auto 0; padding-top:1.5rem;
+    border-top:1px solid rgba(255,255,255,.12);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;
+    font-size:.8rem; color:#8894C4;
+  }
+  .tag-projeto{
+    font-family:var(--fonte-mono); background:rgba(255,255,255,.08);
+    padding:.3rem .7rem; border-radius:999px; border:1px solid rgba(255,255,255,.15);
+  }
+
+  .zona-laele{
+    text-align:center; padding:3rem 1.5rem 4rem; background:var(--superficie);
+  }
+  .btn-laele{
+    background:linear-gradient(120deg, var(--rosa-choque), var(--azul-eletrico));
+    color:#fff; font-size:1.05rem; padding:1.1rem 2.2rem; border-radius:999px;
+    text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:.6rem;
+    box-shadow:0 12px 30px rgba(255,46,136,.35);
+    animation:pulsar 2.4s ease-in-out infinite;
+  }
+  @keyframes pulsar{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.045);} }
+  .zona-laele p{color:var(--texto-suave); max-width:40ch; margin:0 auto 1.4rem;}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
+
+<!-- ============ BARRA DE ACESSIBILIDADE ============ -->
+<div class="barra-acessibilidade" role="toolbar" aria-label="Ferramentas de acessibilidade">
+  <span class="rotulo">Acessibilidade:</span>
+  <button id="btn-diminuir" aria-label="Diminuir tamanho da fonte">A−</button>
+  <button id="btn-aumentar" aria-label="Aumentar tamanho da fonte">A+</button>
+  <button id="btn-reset" aria-label="Restaurar tamanho da fonte padrão">Redefinir</button>
+  <button id="btn-contraste" aria-label="Ativar alto contraste">Alto contraste</button>
+  <div class="espacador"></div>
+  <button id="btn-tema" aria-label="Alternar modo escuro">🌙 Modo escuro</button>
+</div>
+
+<!-- ============ CABEÇALHO ============ -->
+<header class="principal">
+  <div class="nav-wrap">
+    <a href="#topo" class="logo"><span class="ponto"></span>Real ou Fake?</a>
+    <nav class="links" aria-label="Navegação principal">
+      <a href="#o-que-e">O que é</a>
+      <a href="#identificar">Como identificar</a>
+      <a href="#videos">Vídeos</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#praticas">Boas práticas</a>
+    </nav>
+  </div>
+</header>
+
+<main id="conteudo-principal">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="topo">
+  <div class="hero-grid">
+    <div>
+      <span class="eyebrow" style="color:var(--rosa-suave)">Cidadania Digital · 2026</span>
+      <h1>Nem tudo o que você vê na tela realmente aconteceu.</h1>
+      <p class="lead">A Inteligência Artificial já é capaz de criar vídeos, áudios e fotos falsas quase impossíveis de distinguir da realidade. Este site ensina a comunidade escolar a reconhecer deepfakes, driblar a desinformação automatizada e navegar com mais segurança.</p>
+      <div class="cta-row">
+        <a href="#identificar" class="btn btn-rosa">Aprender a identificar →</a>
+        <a href="#quiz" class="btn btn-contorno">Testar meus conhecimentos</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <img src="https://picsum.photos/seed/iahero2026/700/500" alt="Ilustração representando um rosto sendo processado por uma rede neural de inteligência artificial">
+      <div class="legenda">// simulação visual de análise de rosto por IA</div>
+    </div>
+  </div>
+</section>
+
+<div class="fita" aria-hidden="true">
+  <span>⚠ DESCONFIE ANTES DE COMPARTILHAR &nbsp;&nbsp;•&nbsp;&nbsp; 🔎 VERIFIQUE A FONTE &nbsp;&nbsp;•&nbsp;&nbsp; 🧠 PENSE ANTES DE ACREDITAR &nbsp;&nbsp;•&nbsp;&nbsp; ⚠ DESCONFIE ANTES DE COMPARTILHAR &nbsp;&nbsp;•&nbsp;&nbsp; 🔎 VERIFIQUE A FONTE &nbsp;&nbsp;•&nbsp;&nbsp; 🧠 PENSE ANTES DE ACREDITAR &nbsp;&nbsp;•&nbsp;&nbsp;</span>
+</div>
+
+<!-- ============ O QUE É DEEPFAKE ============ -->
+<section id="o-que-e">
+  <div class="container">
+    <div class="grid-2">
+      <div>
+        <span class="selo">📌 Conceito</span>
+        <h2 style="font-size:clamp(1.7rem,3.5vw,2.4rem)">O que é uma deepfake, afinal?</h2>
+        <p>Deepfake é um vídeo, áudio ou imagem manipulado por Inteligência Artificial para fazer parecer que uma pessoa disse ou fez algo que nunca aconteceu de verdade. O nome vem da junção de <em>deep learning</em> (aprendizado profundo) com <em>fake</em> (falso).</p>
+        <p>A tecnologia analisa milhares de fotos e vídeos reais de alguém para aprender seus gestos, sua voz e suas expressões — e depois recria tudo isso em um cenário totalmente inventado. O resultado pode ser divertido (como filtros e memes), mas também pode virar arma de golpes financeiros, bullying e fake news políticas.</p>
+        <div class="grid-3" style="margin-top:1.6rem;">
+          <div class="cartao"><div class="icone">🎭</div><h3>Troca de rosto</h3><p>O rosto de uma pessoa é sobreposto ao de outra em um vídeo já existente.</p></div>
+          <div class="cartao"><div class="icone">🗣️</div><h3>Clonagem de voz</h3><p>A IA imita o tom e o jeito de falar de alguém a partir de poucos segundos de áudio.</p></div>
+          <div class="cartao"><div class="icone">📰</div><h3>Textos automáticos</h3><p>Modelos de linguagem geram notícias falsas em massa, imitando o estilo de veículos reais.</p></div>
+        </div>
+      </div>
+      <div>
+        <img src="https://picsum.photos/seed/redeneural2026/600/720" alt="Representação abstrata de uma rede neural artificial em tons de azul e rosa">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPARADOR REAL x FAKE ============ -->
+<section class="alt">
+  <div class="container">
+    <div class="secao-titulo" style="margin-left:auto; margin-right:auto; text-align:center;">
+      <span class="eyebrow">Experimente</span>
+      <h2>Arraste e compare: real x manipulada</h2>
+      <p style="margin:0 auto;">Deslize o controle para simular como um filtro de IA pode alterar sutilmente uma imagem sem que você perceba de imediato.</p>
+    </div>
+    <div class="comparador" id="comparador">
+      <img class="camada-real" src="https://picsum.photos/seed/rostoreal2026/900/560" alt="Foto original de referência, sem manipulação">
+      <img class="camada-fake" src="https://picsum.photos/seed/rostofake2026/900/560" alt="Versão da mesma cena com filtro simulando alteração por IA">
+      <div class="divisor"></div>
+      <div class="alca">⇔</div>
+      <span class="tag-comparador tag-real">ORIGINAL</span>
+      <span class="tag-comparador tag-fake">ALTERADA</span>
+      <input type="range" min="0" max="100" value="50" id="slider-comparador" aria-label="Controle deslizante para comparar imagem original e alterada">
+    </div>
+    <p class="dica-comparador">💡 Na vida real, a diferença costuma ser bem mais sutil do que isso — por isso é preciso treinar o olhar.</p>
+  </div>
+</section>
+
+<!-- ============ COMO IDENTIFICAR ============ -->
+<section id="identificar">
+  <div class="container">
+    <div class="secao-titulo">
+      <span class="eyebrow">Guia prático</span>
+      <h2>7 sinais para identificar uma deepfake</h2>
+      <p>Nenhum sinal sozinho garante 100% de certeza, mas quanto mais desses pontos você notar, maior a chance de estar diante de um conteúdo manipulado.</p>
+    </div>
+    <ul class="lista-sinais">
+      <li><span class="num">1</span><div><strong>Piscadas estranhas</strong><span class="desc">A pessoa pisca pouco, demais, ou de forma pouco natural.</span></div></li>
+      <li><span class="num">2</span><div><strong>Boca fora de sincronia</strong><span class="desc">Os lábios não combinam perfeitamente com o áudio ou com as palavras ditas.</span></div></li>
+      <li><span class="num">3</span><div><strong>Iluminação inconsistente</strong><span class="desc">Sombras e reflexos no rosto não combinam com o ambiente ao redor.</span></div></li>
+      <li><span class="num">4</span><div><strong>Textura de pele estranha</strong><span class="desc">Pele borrada, "lisa demais" ou com transições esquisitas perto do cabelo e das orelhas.</span></div></li>
+      <li><span class="num">5</span><div><strong>Voz robótica ou monótona</strong><span class="desc">Entonação artificial, pausas estranhas ou emoção que não combina com a fala.</span></div></li>
+      <li><span class="num">6</span><div><strong>Contexto improvável</strong><span class="desc">A pessoa "diz" algo fora do seu perfil público ou histórico conhecido.</span></div></li>
+      <li><span class="num">7</span><div><strong>Fonte não confirmada</strong><span class="desc">O vídeo só circula em redes sociais, sem nenhum veículo de imprensa confirmando.</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ GALERIA ============ -->
+<section class="alt">
+  <div class="container">
+    <div class="secao-titulo">
+      <span class="eyebrow">Em imagens</span>
+      <h2>O universo visual da desinformação</h2>
+    </div>
+    <div class="galeria">
+      <figure><img src="https://picsum.photos/seed/gal1ia/400/400" alt="Tela de computador exibindo código e análise de dados"><figcaption>Análise de dados</figcaption></figure>
+      <figure><img src="https://picsum.photos/seed/gal2ia/400/400" alt="Smartphone exibindo notícias em uma rede social"><figcaption>Redes sociais</figcaption></figure>
+      <figure><img src="https://picsum.photos/seed/gal3ia/400/400" alt="Close-up de um rosto humano com sobreposição digital"><figcaption>Reconhecimento facial</figcaption></figure>
+      <figure><img src="https://picsum.photos/seed/gal4ia/400/400" alt="Sala de aula com estudantes usando notebooks"><figcaption>Educação digital</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VÍDEOS ============ -->
+<section id="videos">
+  <div class="container">
+    <div class="secao-titulo">
+      <span class="eyebrow">Assista</span>
+      <h2>Deepfakes explicadas em vídeo</h2>
+      <p>Dois vídeos para entender, na prática, como a tecnologia funciona e como golpistas já usam IA para enganar pessoas.</p>
+    </div>
+    <div class="video-grid">
+      <div class="video-card">
+        <div class="video-embed">
+          <iframe src="https://www.youtube.com/embed/3PuJAWEzl4g" title="IA & Deep Fakes: desvendando os mistérios e riscos" loading="lazy" allowfullscreen></iframe>
+        </div>
+        <div class="video-info">
+          <h3>IA & Deep Fakes: mistérios e riscos</h3>
+          <p>Uma introdução ao conceito de deepfake, sua origem e os principais riscos envolvidos.</p>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-embed">
+          <iframe src="https://www.youtube.com/embed/LYtI56d68C8" title="Como criminosos usam Inteligência Artificial para aplicar golpes" loading="lazy" allowfullscreen></iframe>
+        </div>
+        <div class="video-info">
+          <h3>Golpes com Inteligência Artificial</h3>
+          <p>Veja exemplos reais de como a IA generativa é usada em fraudes e golpes financeiros.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="alt" id="quiz">
+  <div class="container">
+    <div class="secao-titulo" style="margin:0 auto 3rem; text-align:center;">
+      <span class="eyebrow">Teste seus conhecimentos</span>
+      <h2>Você consegue detectar a desinformação?</h2>
+      <p style="margin:0 auto;">Responda as 5 perguntas e descubra o quão preparado você está.</p>
+    </div>
+
+    <div class="quiz-caixa">
+      <div class="quiz-progresso"><div id="quiz-barra"></div></div>
+      <div id="quiz-area"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOAS PRÁTICAS ============ -->
+<section id="praticas">
+  <div class="container">
+    <div class="secao-titulo">
+      <span class="eyebrow">Proteja-se</span>
+      <h2>Boas práticas de segurança na internet</h2>
+      <p>Pequenos hábitos que fazem uma enorme diferença na sua cidadania digital.</p>
+    </div>
+    <div class="praticas-grid">
+      <div class="cartao"><div class="icone">🔍</div><h3>Verifique antes de compartilhar</h3><p>Busque a mesma notícia em pelo menos dois veículos de imprensa confiáveis antes de repassar.</p></div>
+      <div class="cartao"><div class="icone">🕵️</div><h3>Analise a fonte original</h3><p>Descubra quem publicou o conteúdo pela primeira vez e se o perfil é verificado.</p></div>
+      <div class="cartao"><div class="icone">🔐</div><h3>Proteja seus dados</h3><p>Use senhas fortes e autenticação em duas etapas — dados vazados alimentam deepfakes contra você.</p></div>
+      <div class="cartao"><div class="icone">🧩</div><h3>Use ferramentas de checagem</h3><p>Agências de fact-checking e buscas reversas de imagem ajudam a confirmar a veracidade de um conteúdo.</p></div>
+      <div class="cartao"><div class="icone">🚫</div><h3>Não alimente o pânico</h3><p>Conteúdos criados para gerar raiva ou medo tendem a se espalhar mais rápido — desconfie do impulso.</p></div>
+      <div class="cartao"><div class="icone">🗨️</div><h3>Converse com adultos de confiança</h3><p>Na dúvida sobre algo que viu online, peça a opinião de um professor, familiar ou responsável.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOTÃO LÁ ELE BOY ============ -->
+<section class="zona-laele">
+  <span class="eyebrow">Pausa para descontração</span>
+  <h2 style="font-size:1.6rem;">Depois de tanto aprender, respire um pouco 😄</h2>
+  <p>Um clássico da internet brasileira — porque cidadania digital também é saber rir dos memes que fizeram história.</p>
+  <a class="btn-laele" href="https://youtu.be/_KaA8W_Hov8?si=l75Qq0V-gb4KebSc" target="_blank" rel="noopener noreferrer">▶ Lá ele Boy</a>
+</section>
+
+</main>
+
+<!-- ============ RODAPÉ ============ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <a href="#topo" class="logo" style="color:#fff;"><span class="ponto"></span>Real ou Fake?</a>
+      <p style="max-width:38ch; margin-top:1rem;">Projeto educativo de cidadania digital, criado para conscientizar a comunidade escolar sobre deepfakes, desinformação por IA e boas práticas de segurança na internet.</p>
+    </div>
+    <div>
+      <h4>Navegação</h4>
+      <ul>
+        <li><a href="#o-que-e">O que é uma deepfake</a></li>
+        <li><a href="#identificar">Como identificar</a></li>
+        <li><a href="#videos">Vídeos</a></li>
+        <li><a href="#quiz">Quiz</a></li>
+        <li><a href="#praticas">Boas práticas</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Sobre o projeto</h4>
+      <ul>
+        <li>Feito com HTML5, CSS3 e JavaScript puro</li>
+        <li>Publicado via GitHub Pages</li>
+        <li><span class="tag-projeto">#cidadaniadigital2026</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-base">
+    <span>© 2026 Real ou Fake? — Projeto escolar de Cidadania Digital.</span>
+    <span>Feito sem frameworks · Apenas HTML, CSS e JS</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- ACESSIBILIDADE: TAMANHO DE FONTE ---------- */
+  var raiz = document.documentElement;
+  var escalaAtual = parseFloat(localStorage.getItem('rf_escala')) || 1;
+  function aplicarEscala(){
+    raiz.style.setProperty('--escala-fonte', escalaAtual.toFixed(2));
+    localStorage.setItem('rf_escala', escalaAtual);
+  }
+  aplicarEscala();
+
+  document.getElementById('btn-aumentar').addEventListener('click', function(){
+    escalaAtual = Math.min(escalaAtual + 0.1, 1.6);
+    aplicarEscala();
+  });
+  document.getElementById('btn-diminuir').addEventListener('click', function(){
+    escalaAtual = Math.max(escalaAtual - 0.1, 0.8);
+    aplicarEscala();
+  });
+  document.getElementById('btn-reset').addEventListener('click', function(){
+    escalaAtual = 1;
+    aplicarEscala();
+  });
+
+  /* ---------- ACESSIBILIDADE: MODO ESCURO ---------- */
+  var btnTema = document.getElementById('btn-tema');
+  var temaSalvo = localStorage.getItem('rf_tema');
+  if(temaSalvo === 'escuro'){
+    document.body.setAttribute('data-tema','escuro');
+    btnTema.textContent = '☀️ Modo claro';
+    btnTema.classList.add('ativo');
+  }
+  btnTema.addEventListener('click', function(){
+    var escuro = document.body.getAttribute('data-tema') === 'escuro';
+    if(escuro){
+      document.body.removeAttribute('data-tema');
+      btnTema.textContent = '🌙 Modo escuro';
+      btnTema.classList.remove('ativo');
+      localStorage.setItem('rf_tema','claro');
+    } else {
+      document.body.setAttribute('data-tema','escuro');
+      btnTema.textContent = '☀️ Modo claro';
+      btnTema.classList.add('ativo');
+      localStorage.setItem('rf_tema','escuro');
+    }
+  });
+
+  /* ---------- ACESSIBILIDADE: ALTO CONTRASTE ---------- */
+  var btnContraste = document.getElementById('btn-contraste');
+  var contrasteSalvo = localStorage.getItem('rf_contraste') === 'on';
+  function aplicarContraste(on){
+    if(on){
+      raiz.style.setProperty('--texto-suave', document.body.getAttribute('data-tema')==='escuro' ? '#FFFFFF' : '#000000');
+      raiz.style.setProperty('--borda', document.body.getAttribute('data-tema')==='escuro' ? '#FFFFFF' : '#000000');
+      btnContraste.classList.add('ativo');
+    } else {
+      raiz.style.removeProperty('--texto-suave');
+      raiz.style.removeProperty('--borda');
+      btnContraste.classList.remove('ativo');
+    }
+    localStorage.setItem('rf_contraste', on ? 'on' : 'off');
+  }
+  aplicarContraste(contrasteSalvo);
+  btnContraste.addEventListener('click', function(){
+    aplicarContraste(!(localStorage.getItem('rf_contraste') === 'on'));
+  });
+
+  /* ---------- COMPARADOR REAL x FAKE ---------- */
+  var slider = document.getElementById('slider-comparador');
+  var camadaFake = document.querySelector('.camada-fake');
+  var divisor = document.querySelector('.comparador .divisor');
+  var alca = document.querySelector('.comparador .alca');
+  function atualizarComparador(){
+    var v = slider.value;
+    camadaFake.style.clipPath = 'inset(0 0 0 ' + v + '%)';
+    divisor.style.left = v + '%';
+    alca.style.left = v + '%';
+  }
+  slider.addEventListener('input', atualizarComparador);
+  atualizarComparador();
+
+  /* ---------- QUIZ INTERATIVO ---------- */
+  var perguntas = [
+    {
+      pergunta: "Um vídeo mostra um político famoso confessando um crime, mas o canal que postou tem só 3 seguidores e nenhuma notícia confirma o fato. O que você deve fazer?",
+      opcoes: ["Compartilhar rápido antes que apaguem", "Procurar em veículos de imprensa confiáveis se é verdade", "Comentar xingando o político", "Ignorar completamente sem pensar"],
+      correta: 1,
+      explicacao: "Sempre confirme em fontes jornalísticas confiáveis antes de acreditar ou compartilhar."
+    },
+    {
+      pergunta: "Qual destes é um sinal comum de vídeo deepfake?",
+      opcoes: ["Boca dessincronizada com o áudio", "Vídeo em alta resolução", "Muitas curtidas no post", "Legenda em outro idioma"],
+      correta: 0,
+      explicacao: "Dessincronia labial é um dos sinais técnicos mais comuns em deepfakes."
+    },
+    {
+      pergunta: "Para que servem, principalmente, os sites e agências de 'fact-checking' (checagem de fatos)?",
+      opcoes: ["Criar notícias novas", "Verificar se uma informação é verdadeira ou falsa", "Vender produtos online", "Hospedar vídeos de humor"],
+      correta: 1,
+      explicacao: "Agências de fact-checking analisam e confirmam (ou desmentem) informações que circulam publicamente."
+    },
+    {
+      pergunta: "Você recebe um áudio no celular, supostamente da voz de um familiar, pedindo dinheiro com urgência. Qual é a atitude mais segura?",
+      opcoes: ["Fazer o pix imediatamente", "Ligar diretamente para o familiar por outro meio para confirmar", "Responder só por mensagem de texto", "Encaminhar o áudio para outras pessoas"],
+      correta: 1,
+      explicacao: "Golpes com voz clonada por IA são reais. Sempre confirme por uma ligação direta ou outro canal conhecido."
+    },
+    {
+      pergunta: "Notícias falsas costumam se espalhar mais rápido quando o conteúdo é:",
+      opcoes: ["Calmo e neutro", "Chato e técnico", "Emocionalmente forte, como raiva ou medo", "Muito longo"],
+      correta: 2,
+      explicacao: "Conteúdos que geram forte emoção (raiva, medo, indignação) se espalham mais rápido nas redes."
+    }
+  ];
+
+  var indiceAtual = 0;
+  var pontuacao = 0;
+  var area = document.getElementById('quiz-area');
+  var barra = document.getElementById('quiz-barra');
+
+  function renderizarPergunta(){
+    var p = perguntas[indiceAtual];
+    barra.style.width = (indiceAtual/perguntas.length*100) + '%';
+
+    var html = '<div class="quiz-pergunta">Pergunta ' + (indiceAtual+1) + ' de ' + perguntas.length + '<br><span style="font-weight:500; font-size:1rem; display:block; margin-top:.5rem;">' + p.pergunta + '</span></div>';
+    html += '<div class="quiz-opcoes">';
+    p.opcoes.forEach(function(opcao, i){
+      html += '<button data-indice="' + i + '">' + opcao + '</button>';
+    });
+    html += '</div><div class="quiz-feedback" id="quiz-feedback"></div>';
+    html += '<div class="quiz-rodape"><span style="font-size:.85rem; color:var(--texto-suave);">Pontos: ' + pontuacao + '</span><button class="btn btn-azul" id="quiz-avancar" style="display:none; padding:.6rem 1.2rem; font-size:.85rem;">Próxima →</button></div>';
+
+    area.innerHTML = html;
+
+    var botoes = area.querySelectorAll('.quiz-opcoes button');
+    botoes.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        botoes.forEach(function(b){ b.disabled = true; });
+        var escolhida = parseInt(btn.getAttribute('data-indice'));
+        var feedback = document.getElementById('quiz-feedback');
+        if(escolhida === p.correta){
+          btn.classList.add('correta');
+          pontuacao++;
+          feedback.textContent = '✅ Correto! ' + p.explicacao;
+        } else {
+          btn.classList.add('errada');
+          botoes[p.correta].classList.add('correta');
+          feedback.textContent = '❌ Quase! ' + p.explicacao;
+        }
+        document.getElementById('quiz-avancar').style.display = 'inline-flex';
+      });
+    });
+
+    var avancar = document.getElementById('quiz-avancar');
+    avancar.addEventListener('click', function(){
+      indiceAtual++;
+      if(indiceAtual < perguntas.length){
+        renderizarPergunta();
+      } else {
+        mostrarResultado();
+      }
+    });
+  }
+
+  function mostrarResultado(){
+    barra.style.width = '100%';
+    var mensagem = '';
+    if(pontuacao === perguntas.length) mensagem = 'Excelente! Você tem um olhar muito treinado contra a desinformação. 🏆';
+    else if(pontuacao >= perguntas.length - 2) mensagem = 'Muito bom! Você já sabe se proteger, mas sempre vale reforçar os cuidados. 👏';
+    else mensagem = 'Vale revisar as dicas do site — todo mundo pode cair em uma fake news. Continue aprendendo! 💪';
+
+    area.innerHTML =
+      '<div class="quiz-resultado">' +
+        '<span class="eyebrow">Resultado</span>' +
+        '<div class="pontuacao">' + pontuacao + '/' + perguntas.length + '</div>' +
+        '<p>' + mensagem + '</p>' +
+        '<button class="btn btn-rosa" id="quiz-refazer">Refazer o quiz</button>' +
+      '</div>';
+
+    document.getElementById('quiz-refazer').addEventListener('click', function(){
+      indiceAtual = 0;
+      pontuacao = 0;
+      renderizarPergunta();
+    });
+  }
+
+  renderizarPergunta();
+
+})();
+</script>
+</body>
+</html>
