@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cidadania Digital & IA | Deepfakes e Desinformação</title>
+    <style>
+        :root {
+            --primary-pink: #ff1493;
+            --primary-blue: #00bfff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f0f4ff 0%, #fff0f5 100%);
+            transition: background 0.4s, color 0.4s;
+        }
+        
+        .dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary-pink), var(--primary-blue));
+            color: white;
+            padding: 1.5rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover {
+            transform: translateY(-3px);
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+        
+        .hero {
+            margin-top: 80px;
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://source.unsplash.com/random/1920x1080/?ai-technology') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+        
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: var(--primary-pink);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 25px rgba(255,20,147,0.4);
+        }
+        
+        section {
+            padding: 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h2 {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(to right, var(--primary-pink), var(--primary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s;
+        }
+        
+        .dark-mode .card {
+            background: #2a2a4a;
+        }
+        
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(255,20,147,0.25);
+        }
+        
+        .card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 1.8rem;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .quiz {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .quiz {
+            background: #2a2a4a;
+        }
+        
+        .accessibility-bar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.95);
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: flex;
+            gap: 12px;
+            z-index: 2000;
+        }
+        
+        .dark-mode .accessibility-bar {
+            background: rgba(42,42,74,0.95);
+        }
+        
+        .acc-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.3s;
+        }
+        
+        .acc-btn:hover {
+            transform: scale(1.15);
+        }
+        
+        footer {
+            background: linear-gradient(to right, var(--primary-pink), var(--primary-blue));
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        
+        .special-btn {
+            margin-top: 2rem;
+            background: #ffd700;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.3rem;
+            padding: 18px 50px;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 6px solid #ffc107;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        
+        .dark-mode .warning {
+            background: #3a2a1a;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <nav>
+            <div class="logo">🛡️ Cidadania Digital 2026</div>
+            <ul class="nav-links">
+                <li><a href="#o-que-sao">O que são Deepfakes?</a></li>
+                <li><a href="#impacto">Impacto</a></li>
+                <li><a href="#como-identificar">Como Identificar</a></li>
+                <li><a href="#boas-praticas">Boas Práticas</a></li>
+                <li><a href="#quiz">Teste-se</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Cidadania Digital e Inteligência Artificial</h1>
+            <p>O Impacto das Deepfakes e da Desinformação na Sociedade</p>
+            <a href="#o-que-sao" class="btn">Saiba Mais</a>
+        </div>
+    </section>
+
+    <!-- O QUE SÃO DEEPFAKES -->
+    <section id="o-que-sao">
+        <h2>O que são Deepfakes?</h2>
+        <div class="card-grid">
+            <div class="card">
+                <img src="https://source.unsplash.com/random/600x400/?deepfake" alt="Deepfake">
+                <div class="card-content">
+                    <h3>Definição</h3>
+                    <p>Deepfakes são vídeos, áudios ou imagens manipulados por Inteligência Artificial que trocam rostos, vozes ou expressões de forma extremamente realista.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://source.unsplash.com/random/600x400/?ai-face" alt="IA">
+                <div class="card-content">
+                    <h3>Como são criados?</h3>
+                    <p>Utilizam redes neurais (GANs) treinadas com milhares de fotos e vídeos de uma pessoa para gerar conteúdo falso.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://source.unsplash.com/random/600x400/?fake-news" alt="Fake News">
+                <div class="card-content">
+                    <h3>Deepfakes + Desinformação</h3>
+                    <p>Podem ser usados para criar notícias falsas, difamação, fraudes e até interferir em eleições.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VÍDEO EXPLICATIVO -->
+    <section style="background: #f8f9fa; text-align: center;">
+        <h2 style="margin-bottom: 2rem;">Entenda em 2 minutos</h2>
+        <div class="video-container" style="max-width: 800px; margin: 0 auto;">
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/0zN8v1z5z5g" 
+                    title="Exemplo de Deepfake" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <!-- IMPACTO -->
+    <section id="impacto" style="background: linear-gradient(135deg, #fff0f5, #f0f8ff);">
+        <h2>O Impacto na Sociedade</h2>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-content">
+                    <h3>🚨 Política</h3>
+                    <p>Vídeos falsos de candidatos podem influenciar eleitores e minar a democracia.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3>😢 Bullying e Reputação</h3>
+                    <p>Pessoas comuns são vítimas de deepfakes pornográficos ou humilhantes.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3>💰 Fraudes Financeiras</h3>
+                    <p>CEO deepfake ligando para funcionários pedindo transferências urgentes.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="warning" style="max-width: 900px; margin: 3rem auto;">
+            <strong>⚠️ Atenção:</strong> Em 2025, mais de 60% dos brasileiros já encontraram conteúdo falso gerado por IA nas redes sociais.
+        </div>
+    </section>
+
+    <!-- COMO IDENTIFICAR -->
+    <section id="como-identificar">
+        <h2>Como Identificar Deepfakes</h2>
+        <div class="card-grid">
+            <div class="card">
+                <img src="https://source.unsplash.com/random/600x400/?face-detection" alt="Olhos">
+                <div class="card-content">
+                    <h3>1. Olhos e Piscadas</h3>
+                    <p>IA ainda tem dificuldade em reproduzir piscadas naturais.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://source.unsplash.com/random/600x400/?teeth" alt="Dentes">
+                <div class="card-content">
+                    <h3>2. Dentes e Iluminação</h3>
+                    <p>Verifique se os dentes e sombras no rosto são coerentes com a iluminação.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://source.unsplash.com/random/600x400/?audio-wave" alt="Áudio">
+                <div class="card-content">
+                    <h3>3. Áudio e Sincronia</h3>
+                    <p>Verifique se a voz e os movimentos labiais combinam perfeitamente.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align:center; margin-top: 3rem;">
+            <button onclick="checkDeepfake()" class="btn">Testar uma Imagem Falsa (Simulação)</button>
+        </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz" style="background: #f0f4ff;">
+        <h2>Teste seus Conhecimentos</h2>
+        <div class="quiz" style="max-width: 700px; margin: 0 auto;">
+            <div id="quiz-question">
+                <h3 id="pergunta">Pergunta aparecerá aqui...</h3>
+                <div id="opcoes" style="margin-top: 1.5rem;"></div>
+            </div>
+            <div id="resultado" style="display: none; margin-top: 2rem; font-size: 1.3rem;"></div>
+            <button onclick="proximaPergunta()" id="btn-proximo" style="display: none; margin-top: 1.5rem;" class="btn">Próxima Pergunta</button>
+        </div>
+    </section>
+
+    <!-- BOAS PRÁTICAS -->
+    <section id="boas-praticas">
+        <h2>Boas Práticas de Cidadania Digital</h2>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-content">
+                    <h3>✅ Verifique a Fonte</h3>
+                    <p>Confira se o conteúdo vem de veículos confiáveis.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3>🔍 Use Ferramentas</h3>
+                    <p>Ferramentas como Hive Moderation, Deepware Scanner e Google Reverse Image Search.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3>🛡️ Proteja-se</h3>
+                    <p>Não compartilhe dados pessoais facilmente e ative autenticação em dois fatores.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p style="font-size: 1.4rem; margin-bottom: 1rem;">🌐 Seja um cidadão digital consciente!</p>
+        <p>Projeto desenvolvido para conscientização escolar • 2026</p>
+        
+        <button onclick="window.open('https://youtu.be/_KaA8W_Hov8?si=l75Qq0V-gb4KebSc', '_blank')" 
+                class="btn special-btn">
+            🎵 Lá ele Boy
+        </button>
+        
+        <p style="margin-top: 2rem; font-size: 0.9rem;">Feito com ❤️ para promover uma internet mais segura</p>
+    </footer>
+
+    <!-- BARRA DE ACESSIBILIDADE -->
+    <div class="accessibility-bar">
+        <button onclick="toggleDarkMode()" class="acc-btn" title="Modo Escuro">🌙</button>
+        <button onclick="increaseFont()" class="acc-btn" title="Aumentar Fonte">A+</button>
+        <button onclick="decreaseFont()" class="acc-btn" title="Diminuir Fonte">A-</button>
+        <button onclick="resetAccessibility()" class="acc-btn" title="Resetar">⟳</button>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let fontSize = 16;
+        let currentQuestion = 0;
+        
+        const questions = [
+            {
+                q: "O que significa a palavra 'Deepfake'?",
+                a: ["Um filtro do Instagram", "Vídeo ou imagem manipulado por IA", "Uma rede social nova", "Um tipo de vírus"],
+                correct: 1
+            },
+            {
+                q: "Qual é uma das principais formas de identificar um deepfake?",
+                a: ["Olhar para o céu", "Observar piscadas e iluminação", "Contar os pixels", "Ler os comentários"],
+                correct: 1
+            },
+            {
+                q: "Qual é um grande perigo das deepfakes na política?",
+                a: ["Fazer os políticos dançarem", "Influenciar eleitores com mentiras", "Melhorar a qualidade dos debates", "Nenhum perigo"],
+                correct: 1
+            }
+        ];
+        
+        // Funções de Acessibilidade
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+        
+        function increaseFont() {
+            fontSize += 2;
+            document.documentElement.style.fontSize = fontSize + 'px';
+        }
+        
+        function decreaseFont() {
+            if (fontSize > 12) {
+                fontSize -= 2;
+                document.documentElement.style.fontSize = fontSize + 'px';
+            }
+        }
+        
+        function resetAccessibility() {
+            fontSize = 16;
+            document.documentElement.style.fontSize = '16px';
+            document.body.classList.remove('dark-mode');
+        }
+        
+        // Simulação de verificação de deepfake
+        function checkDeepfake() {
+            alert("🔍 Simulação: Esta imagem apresenta inconsistências típicas de deepfakes (bordas borradas no cabelo e iluminação irregular). Sempre verifique com ferramentas especializadas!");
+        }
+        
+        // Quiz
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('pergunta').textContent = q.q;
+            
+            let opcoesHTML = '';
+            q.a.forEach((opcao, index) => {
+                opcoesHTML += `
+                    <button onclick="answerQuestion(${index})" 
+                            style="display: block; width: 100%; margin: 12px 0; padding: 14px; border: 2px solid #00bfff; background: white; border-radius: 12px; cursor: pointer; font-size: 1.1rem;">
+                        ${opcao}
+                    </button>`;
+            });
+            document.getElementById('opcoes').innerHTML = opcoesHTML;
+            document.getElementById('resultado').style.display = 'none';
+            document.getElementById('btn-proximo').style.display = 'none';
+        }
+        
+        function answerQuestion(selected) {
+            const q = questions[currentQuestion];
+            const resultado = document.getElementById('resultado');
+            
+            if (selected === q.correct) {
+                resultado.innerHTML = `<span style="color: #00cc66;">✅ Correto!</span>`;
+            } else {
+                resultado.innerHTML = `<span style="color: #ff4444;">❌ Errado. A resposta correta era: ${q.a[q.correct]}</span>`;
+            }
+            
+            resultado.style.display = 'block';
+            document.getElementById('btn-proximo').style.display = 'block';
+        }
+        
+        function proximaPergunta() {
+            currentQuestion++;
+            if (currentQuestion >= questions.length) {
+                document.getElementById('quiz-question').innerHTML = `
+                    <h3>🎉 Parabéns! Você completou o quiz.</h3>
+                    <p style="margin-top: 1rem;">Compartilhe seu conhecimento sobre cidadania digital!</p>
+                `;
+                document.getElementById('btn-proximo').style.display = 'none';
+                return;
+            }
+            loadQuestion();
+        }
+        
+        // Inicialização
+        window.onload = function() {
+            loadQuestion();
+            
+            // Scroll suave para links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') !== '#') {
+                        e.preventDefault();
+                        document.querySelector(this.getAttribute('href')).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Mensagem inicial
+            console.log('%c✅ Site de Cidadania Digital carregado com sucesso!', 'color: #ff1493; font-size: 16px;');
+        };
+    </script>
+</body>
+</html>
